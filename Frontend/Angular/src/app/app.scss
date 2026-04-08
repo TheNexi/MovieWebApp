@@ -1,0 +1,39 @@
+.app-shell {
+	max-width: 64rem;
+	margin: 0 auto;
+	padding: 2rem 1rem;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+.app-shell h1 {
+	margin: 0;
+	font-size: 2rem;
+}
+
+.app-shell p {
+	margin-top: 0.5rem;
+	color: #444;
+}
+
+.app-nav {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
+
+.app-nav a {
+	text-decoration: none;
+	color: #0a58ca;
+	border: 1px solid #cfe2ff;
+	border-radius: 0.375rem;
+	padding: 0.375rem 0.625rem;
+}
+
+.app-nav a:hover {
+	background-color: #eef4ff;
+}
+
+.page-content {
+	margin-top: 1.25rem;
+}
