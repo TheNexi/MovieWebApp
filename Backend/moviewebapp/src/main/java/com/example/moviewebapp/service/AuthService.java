@@ -23,10 +23,10 @@ public class AuthService {
     private final UserService userService;
 
     public AuthService(UserRepository userRepository,
-                       TokenService tokenService,
-                       CookieService cookieService,
-                       AuthenticationManager authenticationManager,
-                       UserService userService) {
+            TokenService tokenService,
+            CookieService cookieService,
+            AuthenticationManager authenticationManager,
+            UserService userService) {
         this.userRepository = userRepository;
         this.tokenService = tokenService;
         this.cookieService = cookieService;
@@ -35,14 +35,12 @@ public class AuthService {
     }
 
     public ResponseEntity<?> login(UserRequest userRequest,
-                                   HttpServletResponse response) {
+            HttpServletResponse response) {
         try {
 
-            UsernamePasswordAuthenticationToken auth =
-                    new UsernamePasswordAuthenticationToken(
-                            userRequest.getUsername(),
-                            userRequest.getPassword()
-                    );
+            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+                    userRequest.getUsername(),
+                    userRequest.getPassword());
 
             authenticationManager.authenticate(auth);
 
@@ -83,13 +81,12 @@ public class AuthService {
     }
 
     public ResponseEntity<?> refreshTokens(HttpServletRequest request,
-                                           HttpServletResponse response) {
+            HttpServletResponse response) {
         try {
 
             Cookie[] cookies = request.getCookies();
 
-            String refreshToken =
-                    cookieService.getTokenFromCookies(cookies, "REFRESH_TOKEN");
+            String refreshToken = cookieService.getTokenFromCookies(cookies, "REFRESH_TOKEN");
 
             if (refreshToken == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
@@ -113,12 +110,10 @@ public class AuthService {
         try {
 
             Cookie access = cookieService.createCookie(
-                    "ACCESS_TOKEN", "", 0
-            );
+                    "ACCESS_TOKEN", "", 0);
 
             Cookie refresh = cookieService.createCookie(
-                    "REFRESH_TOKEN", "", 0
-            );
+                    "REFRESH_TOKEN", "", 0);
 
             response.addCookie(access);
             response.addCookie(refresh);
@@ -133,7 +128,6 @@ public class AuthService {
 
     private User getUserFromDatabase(String username) {
         return userRepository.findByUsername(username)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("User not found: " + username));
+                .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
     }
 }
