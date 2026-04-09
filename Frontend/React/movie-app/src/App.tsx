@@ -1,14 +1,17 @@
-import { useEffect } from "react";
-import { getAllMovies } from "./services/movie/movieApi";
+import { Outlet } from "react-router-dom";
+import Navbar from "./components/Navbar";
+import "./styles/app.css";
 
 function App() {
-  useEffect(() => {
-    getAllMovies()
-      .then(res => console.log(res.data))
-      .catch(err => console.error(err));
-  }, []);
+  return (
+    <main className="app-shell">
+      <Navbar />
 
-  return <h1>Sprawdz konsole czy zwraca movie</h1>;
+      <section className="page-content">
+        <Outlet />
+      </section>
+    </main>
+  );
 }
 
 export default App;
