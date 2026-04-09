@@ -45,4 +45,5 @@ npm run dev
 
 
 ## Angular
-<img width="1914" height="1136" alt="image" src="https://github.com/user-attachments/assets/966dfee6-fd68-4919-a92c-239681319452" />
+<img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/eba484d8-ace7-4a32-a946-9e2ef5709e9a" />
+
