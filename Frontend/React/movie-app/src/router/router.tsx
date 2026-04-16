@@ -1,24 +1,55 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-import Login from "../pages/Auth/Login";
-import Register from "../pages/Auth/Register";
-import Home from "../pages/Home/Home";
-import MovieDetails from "../pages/Movie/MovieDetails";
-import Favourites from "../pages/User/Favourites";
-import Profile from "../pages/User/Profile";
+
+import { lazy, Suspense } from "react";
+
+const Login = lazy(() => import("../pages/Auth/Login"));
+const Register = lazy(() => import("../pages/Auth/Register"));
+const Home = lazy(() => import("../pages/Home/Home"));
+const MovieDetails = lazy(() => import("../pages/Movie/MovieDetails"));
+const Favourites = lazy(() => import("../pages/User/Favourites"));
+const Profile = lazy(() => import("../pages/User/Profile"));
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <App />, 
     children: [
-      { path: "", element: <Home /> },
-      { path: "home", element: <Home /> },
-      { path: "login", element: <Login /> },
-      { path: "register", element: <Register /> },
-      { path: "movie/:id", element: <MovieDetails /> },
-      { path: "favourites", element: <Favourites /> },
-      { path: "profile", element: <Profile /> },
+      { path: "", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Home />
+        </Suspense>
+      ) },
+      { path: "home", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Home />
+        </Suspense>
+      ) },
+      { path: "login", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Login />
+        </Suspense>
+      ) },
+      { path: "register", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Register />
+        </Suspense>
+      ) },
+      { path: "movie/:id", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <MovieDetails />
+        </Suspense>
+      ) },
+      { path: "favourites", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Favourites />
+        </Suspense>
+      ) },
+      { path: "profile", element: (
+        <Suspense fallback={<div>Loading...</div>}>
+          <Profile />
+        </Suspense>
+      ) },
     ],
   },
 ]);
