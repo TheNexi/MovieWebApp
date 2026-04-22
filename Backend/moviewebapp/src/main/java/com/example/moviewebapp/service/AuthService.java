@@ -66,7 +66,7 @@ public class AuthService {
             User user = User.builder()
                     .username(userRequest.getUsername())
                     .password(userService.hashPassword(userRequest.getPassword()))
-                    .avatarPath(userRequest.getAvatarPath())
+                    .avatarPath(userRequest.getAvatarPath() != null ? userRequest.getAvatarPath() : "")
                     .build();
 
             userRepository.save(user);

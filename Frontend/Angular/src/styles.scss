@@ -1,1 +1,105 @@
 
+
+* {
+	box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-height: 100vh;
+	background: linear-gradient(135deg, #aac9e4 0%, #e0e7ff 100%);
+	font-family: system-ui, -apple-system, sans-serif;
+}
+
+.auth-page {
+	min-height: 90vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1rem;
+}
+
+.auth-box {
+	background: #ffffff;
+	padding: 3rem 3rem;
+	border-radius: 1.5rem;
+	box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+	width: 100%;
+	max-width: 440px;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+}
+
+.auth-box h2 {
+	text-align: center;
+	margin-bottom: 1.8rem;
+	font-size: 1.8rem;
+	color: #3730a3;
+}
+
+.auth-box form {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+}
+
+.auth-box input {
+	padding: 0.75rem 1rem;
+	border: 1px solid #c7d2fe;
+	border-radius: 0.6rem;
+	font-size: 1rem;
+	transition: all 0.2s ease;
+}
+
+.auth-box input:focus {
+	border-color: #6366f1;
+	box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.2);
+	outline: none;
+}
+
+.auth-box button {
+	margin-top: 0.5rem;
+	padding: 0.8rem;
+	background: linear-gradient(135deg, #6366f1, #4f46e5);
+	color: white;
+	border: none;
+	border-radius: 0.6rem;
+	font-size: 1.05rem;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+
+.auth-box button:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 6px 20px rgba(99, 102, 241, 0.3);
+}
+
+.auth-box .error {
+	color: #dc2626;
+	font-size: 0.9rem;
+}
+
+.auth-box .success {
+	color: #059669;
+	font-size: 0.9rem;
+}
+
+.auth-box .switch-link {
+	margin-top: 1.2rem;
+	text-align: center;
+	font-size: 0.95rem;
+}
+
+.auth-box .switch-link a {
+	color: #6366f1;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.auth-box .switch-link a:hover {
+	text-decoration: underline;
+}
+

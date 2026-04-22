@@ -1,4 +1,30 @@
-<section class="page">
-	<h2>Register</h2>
-	<p>Placeholder for Register page</p>
-</section>
+
+
+<div class="auth-page">
+	<div class="auth-box">
+		<h2>Rejestracja</h2>
+		<form #registerForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+			<input
+				type="text"
+				name="username"
+				[(ngModel)]="username"
+				placeholder="Nazwa użytkownika"
+				required
+				autofocus
+			/>
+			<input
+				type="password"
+				name="password"
+				[(ngModel)]="password"
+				placeholder="Hasło"
+				required
+			/>
+			<button type="submit">Zarejestruj</button>
+			<div *ngIf="error" class="error">{{ error }}</div>
+			<div *ngIf="success" class="success">{{ success }}</div>
+		</form>
+		<div class="switch-link">
+			Masz już konto? <a routerLink="/login">Zaloguj się</a>
+		</div>
+	</div>
+</div>

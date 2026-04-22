@@ -1,4 +1,27 @@
-<section class="page">
-	<h2>Login</h2>
-	<p>Placeholder for Login page</p>
-</section>
+<div class="auth-page">
+	<div class="auth-box">
+		<h2>Logowanie</h2>
+		<form #loginForm="ngForm" (ngSubmit)="onSubmit()" novalidate>
+			<input
+				type="text"
+				name="username"
+				[(ngModel)]="username"
+				placeholder="Nazwa użytkownika"
+				required
+				autofocus
+			/>
+			<input
+				type="password"
+				name="password"
+				[(ngModel)]="password"
+				placeholder="Hasło"
+				required
+			/>
+			<button type="submit">Zaloguj</button>
+			<div *ngIf="error" class="error">{{ error }}</div>
+		</form>
+		<div class="switch-link">
+			Nie masz konta? <a routerLink="/register">Zarejestruj się</a>
+		</div>
+	</div>
+</div>

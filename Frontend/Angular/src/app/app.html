@@ -1,16 +1,17 @@
 <main class="app-shell">
-  <h1>Sprawdz konsole czy zwraca movie</h1>
-
-  <nav class="app-nav">
-    <a routerLink="/home">Home</a>
-    <a routerLink="/login">Login</a>
-    <a routerLink="/register">Register</a>
-    <a routerLink="/movie/1">Movie Details</a>
-    <a routerLink="/favourites">Favourites</a>
-    <a routerLink="/profile">Profile</a>
-  </nav>
-
-  <section class="page-content">
+  <ng-container *ngIf="loggedIn; else authOnly">
+    <nav class="app-nav">
+      <a routerLink="/home">Home</a>
+      <a routerLink="/movie/1">Movie Details</a>
+      <a routerLink="/favourites">Favourites</a>
+      <a routerLink="/profile">Profile</a>
+      <button (click)="logout()" style="margin-left: 16px">Wyloguj</button>
+    </nav>
+    <section class="page-content">
+      <router-outlet></router-outlet>
+    </section>
+  </ng-container>
+  <ng-template #authOnly>
     <router-outlet></router-outlet>
-  </section>
+  </ng-template>
 </main>
