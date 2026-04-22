@@ -1,7 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
-
 import { lazy, Suspense } from "react";
+import PrivateRoute from "./PrivateRoute";
+import { Navigate } from "react-router-dom";
 
 const Login = lazy(() => import("../pages/Auth/Login"));
 const Register = lazy(() => import("../pages/Auth/Register"));
@@ -13,18 +14,9 @@ const Profile = lazy(() => import("../pages/User/Profile"));
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <App />, 
+    element: <App />,
     children: [
-      { path: "", element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Home />
-        </Suspense>
-      ) },
-      { path: "home", element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Home />
-        </Suspense>
-      ) },
+      { index: true, element: <Navigate to="/login" replace /> },
       { path: "login", element: (
         <Suspense fallback={<div>Loading...</div>}>
           <Login />
@@ -35,20 +27,33 @@ export const router = createBrowserRouter([
           <Register />
         </Suspense>
       ) },
+      { path: "home", element: (
+        <PrivateRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Home />
+          </Suspense>
+        </PrivateRoute>
+      ) },
       { path: "movie/:id", element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <MovieDetails />
-        </Suspense>
+        <PrivateRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <MovieDetails />
+          </Suspense>
+        </PrivateRoute>
       ) },
       { path: "favourites", element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Favourites />
-        </Suspense>
+        <PrivateRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Favourites />
+          </Suspense>
+        </PrivateRoute>
       ) },
       { path: "profile", element: (
-        <Suspense fallback={<div>Loading...</div>}>
-          <Profile />
-        </Suspense>
+        <PrivateRoute>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Profile />
+          </Suspense>
+        </PrivateRoute>
       ) },
     ],
   },
