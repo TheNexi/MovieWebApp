@@ -1,4 +1,3 @@
-
 import "../../styles/page.css";
 import "../../styles/auth.css";
 import { useState } from "react";
@@ -19,7 +18,7 @@ const Login = () => {
     setError("");
     try {
       const res = await authApi.login({ username, password });
-      login(res.data, "dummy");
+      login(res.data);
       navigate("/home");
     } catch (err: any) {
       let msg = err?.response?.data?.message || "Błąd logowania";

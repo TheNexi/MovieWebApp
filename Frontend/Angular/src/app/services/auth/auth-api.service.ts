@@ -39,4 +39,14 @@ export class AuthApiService {
       }
     );
   }
+
+  isAuthorized(): Observable<any> {
+    return this.http.get(
+      `${this.baseUrl}/is-authorized`,
+      {
+        withCredentials: true,
+        responseType: 'text' as 'json'
+      }
+    );
+  }
 }
