@@ -28,4 +28,15 @@ export class AuthApiService {
       }
     );
   }
+
+  refresh(): Observable<any> {
+    return this.http.post(
+      `${this.baseUrl}/refresh`,
+      {},
+      {
+        withCredentials: true,
+        responseType: 'text' as 'json'
+      }
+    );
+  }
 }
