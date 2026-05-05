@@ -15,3 +15,6 @@ export const addReviewToMovie = (id: number, data: ReviewRequest) =>
 
 export const getCast = (id: number) =>
   API.get(`/movies/${id}/cast`);
+
+export const getFirstMovies = (limit: number) =>
+  API.get<Movie[]>(`/movies/first/${limit}`);
