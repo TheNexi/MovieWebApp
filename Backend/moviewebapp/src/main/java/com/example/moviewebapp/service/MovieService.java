@@ -7,6 +7,7 @@ import com.example.moviewebapp.response.MovieResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,6 +51,21 @@ public class MovieService {
 
         return ResponseEntity.ok(mapToResponse(movie));
     }
+
+        public ResponseEntity<?> getFirstMoviesResponse(int limit) {
+                if (!isAllowedLimit(limit)) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                        .body("Unsupported limit");
+                }
+
+                List<MovieResponse> movies = movieRepository.findAll(PageRequest.of(0, limit))
+                                .getContent()
+                                .stream()
+                                .map(this::mapToResponse)
+                                .toList();
+
+                return ResponseEntity.ok(movies);
+        }
 
     public ResponseEntity<?> addMovieResponse(MovieRequest request) {
 
@@ -174,4 +190,13 @@ public class MovieService {
                 .averageRating(avgRating)
                 .build();
     }
+
+        private boolean isAllowedLimit(int limit) {
+                return limit == 10
+                                || limit == 100
+                                || limit == 1000
+                                || limit == 2500
+                                || limit == 5000
+                                || limit == 10000;
+        }
 }
