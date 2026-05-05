@@ -2,4 +2,18 @@
 	<h2>Movie Details</h2>
 	<p>Placeholder for Movie Details page</p>
 	<p>Route movie id: {{ movieId ?? 'unknown' }}</p>
+	<div class="fetch-actions">
+		<button
+			*ngFor="let limit of limits"
+			type="button"
+			(click)="fetchMovies(limit)"
+			[disabled]="loadingLimit !== null"
+			class="fetch-button"
+		>
+			Pobierz pierwsze {{ limit }}
+		</button>
+	</div>
+	<ul class="fetch-log">
+		<li *ngFor="let entry of logs">{{ entry }}</li>
+	</ul>
 </section>

@@ -39,4 +39,10 @@ export class MovieApiService {
       withCredentials: true,
     });
   }
+
+  getFirstMovies(limit: number): Observable<Movie[]> {
+    return this.http.get<Movie[]>(`${this.baseUrl}/movies/first/${limit}`, {
+      withCredentials: true,
+    });
+  }
 }
