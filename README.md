@@ -48,9 +48,7 @@ npm run dev
 <img width="1919" height="1139" alt="image" src="https://github.com/user-attachments/assets/eba484d8-ace7-4a32-a946-9e2ef5709e9a" />
 
 
-## Zdjęcia użyte w projekcie pobrano z open-source https://www.magnific.com/free-photos-vectors/director:
-
----------------------
+## Zdjęcia użyte w projekcie pobrano z open-source https://www.magnific.com/free-photos-vectors/director i https://pixabay.com/photos/search/movie%20poster/
 
 You must attribute the image to its author:
 

@@ -72,7 +72,7 @@ SELECT
     'Fictional movie ' || LPAD(gs::text, 5, '0') || ' used for UI performance testing.',
     DATE '2000-01-01' + (gs * 17),
     85 + (gs % 55),
-    '/posters/movie-' || LPAD(gs::text, 5, '0') || '.jpg'
+    '/posters/movie-' || LPAD((((gs - 1) % 5) + 1)::text, 3, '0') || '.jpg'
 FROM generate_series(1, 10000) AS gs
 ON CONFLICT (id) DO NOTHING;
 

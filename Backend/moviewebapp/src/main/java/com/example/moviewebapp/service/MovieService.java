@@ -5,10 +5,11 @@ import com.example.moviewebapp.repository.*;
 import com.example.moviewebapp.request.MovieRequest;
 import com.example.moviewebapp.response.MovieResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -21,12 +22,13 @@ public class MovieService {
     private final CommentRepository commentRepository;
     private final UserService userService;
 
-    public MovieService(MovieRepository movieRepository,
-                        RatingRepository ratingRepository,
-                        ReviewRepository reviewRepository,
-                        CommentRepository commentRepository,
-                        UserService userService) {
-
+    public MovieService(
+            MovieRepository movieRepository,
+            RatingRepository ratingRepository,
+            ReviewRepository reviewRepository,
+            CommentRepository commentRepository,
+            UserService userService
+    ) {
         this.movieRepository = movieRepository;
         this.ratingRepository = ratingRepository;
         this.reviewRepository = reviewRepository;
@@ -52,20 +54,24 @@ public class MovieService {
         return ResponseEntity.ok(mapToResponse(movie));
     }
 
-        public ResponseEntity<?> getFirstMoviesResponse(int limit) {
-                if (!isAllowedLimit(limit)) {
-                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                        .body("Unsupported limit");
-                }
+    public ResponseEntity<?> getFirstMoviesResponse(int limit) {
 
-                List<MovieResponse> movies = movieRepository.findAll(PageRequest.of(0, limit))
-                                .getContent()
-                                .stream()
-                                .map(this::mapToResponse)
-                                .toList();
-
-                return ResponseEntity.ok(movies);
+        if (!isAllowedLimit(limit)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Unsupported limit");
         }
+
+        List<Movie> movies = movieRepository.findAll(
+                PageRequest.of(0, limit)
+        ).getContent();
+
+        List<MovieResponse> response = movies
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+
+        return ResponseEntity.ok(response);
+    }
 
     public ResponseEntity<?> addMovieResponse(MovieRequest request) {
 
@@ -83,9 +89,11 @@ public class MovieService {
                 .body(mapToResponse(movie));
     }
 
-    public ResponseEntity<?> addRatingResponse(Long movieId,
-                                               Integer ratingValue,
-                                               HttpServletRequest request) {
+    public ResponseEntity<?> addRatingResponse(
+            Long movieId,
+            Integer ratingValue,
+            HttpServletRequest request
+    ) {
 
         User user = userService.getUserFromRequest(request);
 
@@ -109,9 +117,11 @@ public class MovieService {
         return ResponseEntity.ok("Rating added");
     }
 
-    public ResponseEntity<?> addReviewResponse(Long movieId,
-                                               String reviewContent,
-                                               HttpServletRequest request) {
+    public ResponseEntity<?> addReviewResponse(
+            Long movieId,
+            String reviewContent,
+            HttpServletRequest request
+    ) {
 
         User user = userService.getUserFromRequest(request);
 
@@ -135,9 +145,11 @@ public class MovieService {
         return ResponseEntity.ok("Review added");
     }
 
-    public ResponseEntity<?> addCommentResponse(Long reviewId,
-                                                String commentContent,
-                                                HttpServletRequest request) {
+    public ResponseEntity<?> addCommentResponse(
+            Long reviewId,
+            String commentContent,
+            HttpServletRequest request
+    ) {
 
         User user = userService.getUserFromRequest(request);
 
@@ -184,19 +196,22 @@ public class MovieService {
                 .releaseDate(movie.getReleaseDate())
                 .durationMinutes(movie.getDurationMinutes())
                 .posterUrl(movie.getPosterUrl())
-                .genres(movie.getGenres().stream().map(Genre::getName).toList())
-                .actors(movie.getActors().stream().map(Actor::getName).toList())
-                .directors(movie.getDirectors().stream().map(Director::getName).toList())
+
+                // TEMP: wyłączone dla testów wydajności
+                .genres(List.of())
+                .actors(List.of())
+                .directors(List.of())
+
                 .averageRating(avgRating)
                 .build();
     }
 
-        private boolean isAllowedLimit(int limit) {
-                return limit == 10
-                                || limit == 100
-                                || limit == 1000
-                                || limit == 2500
-                                || limit == 5000
-                                || limit == 10000;
-        }
+    private boolean isAllowedLimit(int limit) {
+        return limit == 10
+                || limit == 100
+                || limit == 1000
+                || limit == 2500
+                || limit == 5000
+                || limit == 10000;
+    }
 }

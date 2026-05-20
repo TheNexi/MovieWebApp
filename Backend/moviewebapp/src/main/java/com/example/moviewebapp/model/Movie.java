@@ -2,8 +2,9 @@ package com.example.moviewebapp.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.time.LocalDate;
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -29,10 +30,10 @@ public class Movie {
     private String posterUrl;
 
     @OneToMany(mappedBy = "movie")
-    private List<Rating> ratings;
+    private Set<Rating> ratings;
 
     @OneToMany(mappedBy = "movie")
-    private List<Review> reviews;
+    private Set<Review> reviews;
 
     @ManyToMany
     @JoinTable(
@@ -40,7 +41,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "genre_id")
     )
-    private List<Genre> genres;
+    private Set<Genre> genres;
 
     @ManyToMany
     @JoinTable(
@@ -48,7 +49,7 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "actor_id")
     )
-    private List<Actor> actors;
+    private Set<Actor> actors;
 
     @ManyToMany
     @JoinTable(
@@ -56,5 +57,5 @@ public class Movie {
             joinColumns = @JoinColumn(name = "movie_id"),
             inverseJoinColumns = @JoinColumn(name = "director_id")
     )
-    private List<Director> directors;
+    private Set<Director> directors;
 }
