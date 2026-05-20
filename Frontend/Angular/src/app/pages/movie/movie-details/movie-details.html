@@ -1,19 +1,173 @@
 <section class="page">
-	<h2>Movie Details</h2>
-	<p>Placeholder for Movie Details page</p>
-	<p>Route movie id: {{ movieId ?? 'unknown' }}</p>
-	<div class="fetch-actions">
-		<button
-			*ngFor="let limit of limits"
-			type="button"
-			(click)="fetchMovies(limit)"
-			[disabled]="loadingLimit !== null"
-			class="fetch-button"
-		>
-			Pobierz pierwsze {{ limit }}
-		</button>
-	</div>
-	<ul class="fetch-log">
-		<li *ngFor="let entry of logs">{{ entry }}</li>
-	</ul>
+
+  <div class="top-bar">
+    <div>
+      <h2>DOM Tests</h2>
+    </div>
+
+    <div class="status-box">
+      {{ currentStatus }}
+    </div>
+  </div>
+
+  <div class="mode-switch">
+    <button
+      type="button"
+      class="mode-button"
+      [class.active]="measureMode === 'json'"
+      (click)="setMode('json')"
+    >
+      JSON only
+    </button>
+
+    <button
+      type="button"
+      class="mode-button"
+      [class.active]="measureMode === 'render'"
+      (click)="setMode('render')"
+    >
+      JSON + Render UI
+    </button>
+
+    <button
+      type="button"
+      class="clear-button"
+      (click)="clearLogs()"
+    >
+      Wyczyść historię
+    </button>
+  </div>
+
+  <div class="fetch-actions">
+    <button
+      *ngFor="let limit of limits"
+      type="button"
+      (click)="fetchMovies(limit)"
+      [disabled]="loadingLimit !== null"
+      class="fetch-button"
+    >
+      {{ limit }}
+    </button>
+  </div>
+
+  <div class="layout">
+    <div class="left-panel">
+      <div class="panel current-panel">
+        <h3>Aktualny pomiar</h3>
+
+        <ng-container *ngIf="currentRun; else idle">
+          <ng-container
+            *ngTemplateOutlet="logCard; context: { $implicit: currentRun }"
+          ></ng-container>
+        </ng-container>
+
+        <ng-template #idle>
+          <div class="json-mode">
+            Brak aktywnego pomiaru
+          </div>
+        </ng-template>
+      </div>
+
+      <div class="panel history-panel">
+        <div class="panel-header">
+          <h3>Historia pomiarów</h3>
+          <span>{{ logs.length }} wpisów</span>
+        </div>
+
+        <div class="history-scroll">
+
+          <div *ngIf="logs.length === 0" class="empty-state">
+            Brak pomiarów
+          </div>
+
+          <ng-container *ngFor="let log of logs">
+            <ng-container
+              *ngTemplateOutlet="logCard; context: { $implicit: log }"
+            ></ng-container>
+          </ng-container>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="panel movies-panel" *ngIf="measureMode === 'render'">
+
+      <div class="panel-header">
+        <h3>Wyniki</h3>
+        <span>{{ movies.length }} filmów</span>
+      </div>
+
+      <ng-container *ngIf="movies.length > 0; else noMovies">
+
+        <cdk-virtual-scroll-viewport itemSize="140" class="viewport">
+
+          <div
+            *cdkVirtualFor="let movie of movies; trackBy: trackById"
+            class="movie-row"
+          >
+            <img
+              [src]="'http://localhost:8080' + movie.posterUrl"
+              (error)="($event.target.src='https://via.placeholder.com/80x120')"
+              [alt]="movie.title"
+              width="80"
+              height="120"
+              class="poster"
+            />
+
+            <div class="movie-content">
+              <h3>{{ movie?.title }}</h3>
+              <p>{{ movie?.description }}</p>
+              <small>{{ movie?.releaseDate }}</small>
+            </div>
+          </div>
+
+        </cdk-virtual-scroll-viewport>
+
+      </ng-container>
+
+      <ng-template #noMovies>
+        <div class="empty-state">
+          Brak danych do wyświetlenia
+        </div>
+      </ng-template>
+
+    </div>
+
+  </div>
+
 </section>
+
+<ng-template #logCard let-log>
+  <div class="log-card" [class.error]="log.status === 'error'">
+
+    <span class="mode-dot" [class.json]="log.mode === 'json'"></span>
+
+    <div class="log-top">
+      <span class="badge">
+        {{ log.mode === 'json' ? 'JSON' : 'RENDER' }}
+      </span>
+
+      <span class="time">
+        {{ log.timestamp }}
+      </span>
+    </div>
+
+    <div class="log-main">
+      {{ log.limit }} filmów
+    </div>
+
+    <div class="metrics">
+      <div class="metric">
+        <span class="label">ms</span>
+        <strong>{{ log.durationMs }}</strong>
+      </div>
+
+      <div class="metric">
+        <span class="label">s</span>
+        <strong>{{ log.durationSec }}</strong>
+      </div>
+    </div>
+
+  </div>
+</ng-template>
