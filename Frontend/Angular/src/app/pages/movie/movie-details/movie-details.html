@@ -1,16 +1,19 @@
 <section class="page">
 
   <div class="top-bar">
+
     <div>
-      <h2>DOM Tests</h2>
+      <h2>DOM Performance Tests</h2>
     </div>
 
     <div class="status-box">
       {{ currentStatus }}
     </div>
+
   </div>
 
   <div class="mode-switch">
+
     <button
       type="button"
       class="mode-button"
@@ -26,7 +29,7 @@
       [class.active]="measureMode === 'render'"
       (click)="setMode('render')"
     >
-      JSON + Render UI
+      Full Render
     </button>
 
     <button
@@ -34,103 +37,129 @@
       class="clear-button"
       (click)="clearLogs()"
     >
-      Wyczyść historię
+      Clear history
     </button>
+
   </div>
 
   <div class="fetch-actions">
+
     <button
       *ngFor="let limit of limits"
       type="button"
-      (click)="fetchMovies(limit)"
-      [disabled]="loadingLimit !== null"
       class="fetch-button"
+      [class.active]="loadingLimit === limit"
+      [disabled]="loadingLimit !== null"
+      (click)="fetchMovies(limit)"
     >
       {{ limit }}
     </button>
+
   </div>
 
   <div class="layout">
     <div class="left-panel">
       <div class="panel current-panel">
-        <h3>Aktualny pomiar</h3>
+        <div class="panel-header">
+          <h3>Current measurement</h3>
+        </div>
 
-        <ng-container *ngIf="currentRun; else idle">
+        <ng-container *ngIf="currentRun; else emptyCurrent">
+
           <ng-container
             *ngTemplateOutlet="logCard; context: { $implicit: currentRun }"
           ></ng-container>
+
         </ng-container>
 
-        <ng-template #idle>
-          <div class="json-mode">
-            Brak aktywnego pomiaru
+        <ng-template #emptyCurrent>
+
+          <div class="empty-state">
+            No measurement yet
           </div>
+
         </ng-template>
+
       </div>
 
       <div class="panel history-panel">
+
         <div class="panel-header">
-          <h3>Historia pomiarów</h3>
-          <span>{{ logs.length }} wpisów</span>
+
+          <h3>History</h3>
+
+          <span>
+            {{ logs.length }} entries
+          </span>
+
         </div>
 
         <div class="history-scroll">
 
           <div *ngIf="logs.length === 0" class="empty-state">
-            Brak pomiarów
+            History is empty
           </div>
 
           <ng-container *ngFor="let log of logs">
+
             <ng-container
               *ngTemplateOutlet="logCard; context: { $implicit: log }"
             ></ng-container>
+
           </ng-container>
 
         </div>
+
       </div>
 
     </div>
 
-    <div class="panel movies-panel" *ngIf="measureMode === 'render'">
+    <div class="panel movies-panel">
 
       <div class="panel-header">
-        <h3>Wyniki</h3>
-        <span>{{ movies.length }} filmów</span>
+
+        <h3>DOM Grid Render</h3>
+
+        <span>
+          {{ movies.length }} movies
+        </span>
+
       </div>
 
-      <ng-container *ngIf="movies.length > 0; else noMovies">
+      <div
+        *ngIf="measureMode === 'json'"
+        class="json-mode"
+      >
+        JSON mode enabled — rendering disabled
+      </div>
 
-        <cdk-virtual-scroll-viewport itemSize="140" class="viewport">
+      <div
+        *ngIf="measureMode === 'render'"
+        class="movies-grid"
+      >
 
-          <div
-            *cdkVirtualFor="let movie of movies; trackBy: trackById"
-            class="movie-row"
-          >
-            <img
-              [src]="'http://localhost:8080' + movie.posterUrl"
-              (error)="($event.target.src='https://via.placeholder.com/80x120')"
-              [alt]="movie.title"
-              width="80"
-              height="120"
-              class="poster"
-            />
+        <div
+          *ngFor="let movie of movies; trackBy: trackById"
+          class="movie-card"
+        >
 
-            <div class="movie-content">
-              <h3>{{ movie?.title }}</h3>
-              <p>{{ movie?.description }}</p>
-              <small>{{ movie?.releaseDate }}</small>
-            </div>
-          </div>
+          <img
+            [src]="
+              'http://localhost:8080' +
+              movie.posterUrl +
+              '?v=' +
+              imageSession +
+              '-' +
+              movie.id
+            "
+            [alt]="movie.title"
+            class="poster"
+            (error)="($event.target.src='https://via.placeholder.com/140x210')"
+          />
 
-        </cdk-virtual-scroll-viewport>
-
-      </ng-container>
-
-      <ng-template #noMovies>
-        <div class="empty-state">
-          Brak danych do wyświetlenia
         </div>
-      </ng-template>
+
+      </div>
 
     </div>
 
@@ -139,11 +168,11 @@
 </section>
 
 <ng-template #logCard let-log>
+
   <div class="log-card" [class.error]="log.status === 'error'">
 
-    <span class="mode-dot" [class.json]="log.mode === 'json'"></span>
-
     <div class="log-top">
+
       <span class="badge">
         {{ log.mode === 'json' ? 'JSON' : 'RENDER' }}
       </span>
@@ -151,23 +180,27 @@
       <span class="time">
         {{ log.timestamp }}
       </span>
+
     </div>
 
     <div class="log-main">
-      {{ log.limit }} filmów
+      {{ log.limit }} movies
     </div>
 
     <div class="metrics">
+
       <div class="metric">
-        <span class="label">ms</span>
-        <strong>{{ log.durationMs }}</strong>
+        <span class="label">Milliseconds</span>
+        <strong>{{ log.durationMs }} ms</strong>
       </div>
 
       <div class="metric">
-        <span class="label">s</span>
-        <strong>{{ log.durationSec }}</strong>
+        <span class="label">Seconds</span>
+        <strong>{{ log.durationSec }} s</strong>
       </div>
+
     </div>
 
   </div>
+
 </ng-template>

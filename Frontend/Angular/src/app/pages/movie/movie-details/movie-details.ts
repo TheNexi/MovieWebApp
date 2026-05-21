@@ -8,7 +8,6 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { MovieApiService } from '../../../services/movie/movie-api.service';
 import { catchError, finalize, of } from 'rxjs';
-import { ScrollingModule } from '@angular/cdk/scrolling';
 
 type MeasureMode = 'json' | 'render';
 
@@ -24,7 +23,7 @@ interface PerformanceLog {
 
 @Component({
   selector: 'app-movie-details',
-  imports: [CommonModule, ScrollingModule],
+  imports: [CommonModule],
   templateUrl: './movie-details.html',
   styleUrl: './movie-details.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -33,23 +32,36 @@ export class MovieDetails {
   private readonly route = inject(ActivatedRoute);
   private readonly movieApi = inject(MovieApiService);
   private readonly cdr = inject(ChangeDetectorRef);
+
   protected readonly movieId = this.route.snapshot.paramMap.get('id');
+
   protected readonly limits = [10, 100, 1000, 2500, 5000, 10000];
+
   protected measureMode: MeasureMode = 'json';
+
   protected movies: any[] = [];
+
   protected loadingLimit: number | null = null;
+
   protected currentStatus = 'Gotowe do pomiaru';
+
   protected logs: PerformanceLog[] = [];
+
   protected currentRun: PerformanceLog | null = null;
+
+  protected imageSession = Date.now();
+
   private idCounter = 0;
 
   protected setMode(mode: MeasureMode): void {
     this.measureMode = mode;
+
     this.movies = [];
+
     this.currentStatus =
       mode === 'json'
-        ? 'Tryb: JSON (bez renderu)'
-        : 'Tryb: RENDER UI';
+        ? 'Tryb: JSON only'
+        : 'Tryb: Full DOM render';
 
     this.cdr.markForCheck();
   }
@@ -57,6 +69,7 @@ export class MovieDetails {
   protected clearLogs(): void {
     this.logs = [];
     this.currentRun = null;
+
     this.cdr.markForCheck();
   }
 
@@ -67,6 +80,8 @@ export class MovieDetails {
   }
 
   protected fetchMovies(limit: number): void {
+    this.imageSession = Date.now();
+
     this.moveCurrentToHistory();
 
     this.loadingLimit = limit;
@@ -91,7 +106,8 @@ export class MovieDetails {
 
     this.cdr.markForCheck();
 
-    this.movieApi.getFirstMovies(limit)
+    this.movieApi
+      .getFirstMovies(limit)
       .pipe(
         catchError(() => {
           const durationMs = performance.now() - start;
@@ -106,6 +122,7 @@ export class MovieDetails {
           }
 
           this.currentStatus = 'Błąd requestu';
+
           return of([]);
         }),
         finalize(() => {
@@ -114,7 +131,6 @@ export class MovieDetails {
         })
       )
       .subscribe((movies) => {
-
         const jsonTime = performance.now() - start;
 
         if (this.measureMode === 'json') {
@@ -128,7 +144,9 @@ export class MovieDetails {
           }
 
           this.currentStatus = `JSON: ${movies.length} rekordów`;
+
           this.cdr.markForCheck();
+
           return;
         }
 
@@ -146,7 +164,8 @@ export class MovieDetails {
             };
           }
 
-          this.currentStatus = `RENDER: ${movies.length} filmów`;
+          this.currentStatus = `DOM Render: ${movies.length} elementów`;
+
           this.cdr.markForCheck();
         });
       });
