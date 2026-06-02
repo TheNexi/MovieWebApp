@@ -1,0 +1,25 @@
+<div class="search-home-container">
+  <h1>Zaawansowana Wyszukiwarka Filmów (Angular)</h1>
+  <div class="search-input-group">
+      <div class="search-input-wrapper">
+          <input 
+              type="text" 
+              placeholder="Wpisz szukaną frazę np. Star Wars..." 
+              [formControl]="searchControl"
+              (focus)="onFocus()"
+              (blur)="onBlur()"
+              (keydown.enter)="handleSearch()"
+          />
+          
+          <ul class="search-suggestions" *ngIf="showSuggestions && suggestions.length > 0">
+              <li 
+                  *ngFor="let movie of suggestions"
+                  (mousedown)="selectSuggestion(movie.title)"
+              >
+                  {{ movie.title }}
+              </li>
+          </ul>
+      </div>
+      <button (click)="handleSearch()">Szukaj</button>
+  </div>
+</div>

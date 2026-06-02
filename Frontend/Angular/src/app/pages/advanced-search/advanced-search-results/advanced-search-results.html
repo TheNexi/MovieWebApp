@@ -1,0 +1,35 @@
+<div class="search-results-container">
+
+  <div class="search-results-header">
+    <h2>Wyniki wyszukiwania</h2>
+
+    <input type="text" [formControl]="filterControl" />
+  </div>
+
+  <div class="search-results-info">
+    <p *ngIf="loading">Ładowanie...</p>
+    <p *ngIf="!loading && hasSearched">
+      Znaleziono: {{ results.length }}
+    </p>
+  </div>
+
+<cdk-virtual-scroll-viewport itemSize="80" class="viewport">
+
+  <div class="movie-row" *cdkVirtualFor="let movie of results">
+    
+    <div class="movie-item-card">
+      <div class="movie-item-details">
+        <strong>{{ movie.title }}</strong>
+        <span>{{ movie.averageRating }}/10</span>
+      </div>
+
+      <div class="movie-item-price">
+        {{ movie.durationMinutes }} min
+      </div>
+    </div>
+
+  </div>
+
+</cdk-virtual-scroll-viewport>
+
+</div>
