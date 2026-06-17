@@ -1,12 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CastMember, Movie, RatingRequest, ReviewRequest } from './movie-types';
+import {
+  CastMember,
+  Movie,
+  RatingRequest,
+  ReviewRequest
+} from './movie-types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MovieApiService {
+
   private readonly http = inject(HttpClient);
   private readonly baseUrl = 'http://localhost:8080/api/v1';
 
@@ -22,14 +28,14 @@ export class MovieApiService {
     });
   }
 
-  rateMovie(id: number, data: RatingRequest): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/movies/${id}/rate`, data, {
+  rateMovie(id: number, data: RatingRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/movies/${id}/rate`, data, {
       withCredentials: true,
     });
   }
 
-  addReviewToMovie(id: number, data: ReviewRequest): Observable<void> {
-    return this.http.post<void>(`${this.baseUrl}/movies/${id}/review`, data, {
+  addReviewToMovie(id: number, data: ReviewRequest): Observable<any> {
+    return this.http.post(`${this.baseUrl}/movies/${id}/review`, data, {
       withCredentials: true,
     });
   }

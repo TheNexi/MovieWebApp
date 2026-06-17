@@ -1,0 +1,46 @@
+<div class="review-form-container">
+  <h3>Napisz recenzję</h3>
+
+  <form (ngSubmit)="submit()" class="review-form">
+
+    <textarea
+      [(ngModel)]="content"
+      name="content"
+      placeholder="Podziel się swoimi wrażeniami..."
+      rows="4"
+      [disabled]="isSubmitting"
+      [class.input-error]="error"
+    ></textarea>
+
+    <input
+      *ngIf="!isAnonymous"
+      [(ngModel)]="username"
+      name="username"
+      type="text"
+      placeholder="Twoja nazwa (opcjonalnie)"
+      [disabled]="isSubmitting"
+    />
+
+    <label class="anon-box">
+      <input
+        type="checkbox"
+        [(ngModel)]="isAnonymous"
+        name="anon"
+      />
+      Napisz jako anonim
+    </label>
+
+    <div *ngIf="error" class="error-message">
+      ⚠ {{ error }}
+    </div>
+
+    <div *ngIf="success" class="success-message">
+      ✔ Recenzja została opublikowana!
+    </div>
+
+    <button type="submit" [disabled]="isSubmitting || !!validate(content)">
+      {{ isSubmitting ? 'Wysyłanie...' : 'Recenzje' }}
+    </button>
+
+  </form>
+</div>

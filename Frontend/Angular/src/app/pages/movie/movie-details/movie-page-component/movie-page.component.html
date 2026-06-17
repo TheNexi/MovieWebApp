@@ -1,0 +1,77 @@
+<div class="movie-page" *ngIf="!loading && movie; else state">
+
+  <div class="movie-hero">
+
+    <img
+      class="movie-poster"
+      [src]="'http://localhost:8080' + movie.posterUrl"
+      [alt]="movie.title"
+    />
+
+    <div class="movie-details">
+      <h1>{{ movie.title }}</h1>
+
+      <div class="badges">
+        <span>⭐ {{ movie.averageRating || '—' }}</span>
+
+        <span>
+          {{ movie.durationMinutes ? movie.durationMinutes + ' min' : '—' }}
+        </span>
+
+        <span>
+          {{ movie.releaseDate ? (movie.releaseDate | date:'yyyy') : '—' }}
+        </span>
+      </div>
+
+      <p>{{ movie.description || '—' }}</p>
+    </div>
+  </div>
+
+  <div class="movie-info">
+    <p><b>Genres:</b> {{ movie.genres?.join(', ') || '—' }}</p>
+    <p><b>Actors:</b> {{ movie.actors?.join(', ') || '—' }}</p>
+    <p><b>Directors:</b> {{ movie.directors?.join(', ') || '—' }}</p>
+  </div>
+
+  <div class="review-form-wrapper">
+    <h2>Recenzje</h2>
+
+    <app-review-form
+      [movieId]="movie.id"
+      (reviewAdded)="loadMovie()"
+    ></app-review-form>
+
+      <div class="reviews">
+
+    <div *ngIf="movie.reviews?.length; else noReviews">
+      <div class="review" *ngFor="let r of movie.reviews">
+
+        <div class="review-user">
+          👤 {{ r.username || 'Anonim' }}
+        </div>
+
+        <div class="review-content">
+          {{ r.content }}
+        </div>
+
+        <div class="review-date">
+          {{ r.createdAt | date:'short' }}
+        </div>
+
+      </div>
+    </div>
+
+    <ng-template #noReviews>
+      <p>Brak recenzji</p>
+    </ng-template>
+
+  </div>
+  </div>
+
+</div>
+
+<ng-template #state>
+  <div class="state">
+    {{ loading ? 'Ładowanie...' : error }}
+  </div>
+</ng-template>

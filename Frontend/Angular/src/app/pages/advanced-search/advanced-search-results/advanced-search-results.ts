@@ -8,25 +8,21 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Title, Meta } from '@angular/platform-browser';
 import { ScrollingModule } from '@angular/cdk/scrolling';
-import {
-  Subject,
-  takeUntil,
-  debounceTime,
-  distinctUntilChanged,
-  switchMap,
-  of,
-  tap
-} from 'rxjs';
+import { Subject, takeUntil, debounceTime, distinctUntilChanged, tap } from 'rxjs';
 
-import { AdvancedSearchService, MovieProduct } from '../../../services/advanced-search/advanced-search.service';
+import {
+  AdvancedSearchService,
+  MovieProduct
+} from '../../../services/advanced-search/advanced-search.service';
+import { Movie } from '../../../services/movie/movie-types';
 
 @Component({
   selector: 'app-advanced-search-results',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, ScrollingModule],
+  imports: [CommonModule, ReactiveFormsModule, ScrollingModule, RouterModule],
   templateUrl: './advanced-search-results.html',
   styleUrls: ['./advanced-search-results.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -55,9 +51,7 @@ export class AdvancedSearchResults implements OnInit, OnDestroy {
       tap(params => {
         const query = params['q'] || '';
 
-        if (this.filterControl.value !== query) {
-          this.filterControl.setValue(query, { emitEvent: false });
-        }
+        this.filterControl.setValue(query, { emitEvent: false });
 
         this.updateSEO(query);
         this.triggerSearch(query);
@@ -69,18 +63,19 @@ export class AdvancedSearchResults implements OnInit, OnDestroy {
       distinctUntilChanged(),
       takeUntil(this.destroy$)
     ).subscribe(value => {
-      const query = value ?? '';
-
       this.router.navigate([], {
         relativeTo: this.route,
-        queryParams: { q: query },
+        queryParams: { q: value ?? '' },
         replaceUrl: true
       });
     });
   }
 
-  private triggerSearch(query: string) {
+openMovie(movie: Movie) {
+  this.router.navigate(['/movie-page', movie.id]);
+}
 
+  private triggerSearch(query: string) {
     this.loading = true;
     this.hasSearched = false;
     this.cdr.markForCheck();
@@ -95,7 +90,7 @@ export class AdvancedSearchResults implements OnInit, OnDestroy {
         this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Błąd podczas pobierania danych', err);
+        console.error(err);
         this.loading = false;
         this.hasSearched = true;
         this.cdr.markForCheck();
@@ -104,13 +99,10 @@ export class AdvancedSearchResults implements OnInit, OnDestroy {
   }
 
   private updateSEO(query: string) {
-    this.titleService.setTitle(
-      `Wyniki wyszukiwania: ${query || 'wszystko'}`
-    );
-
+    this.titleService.setTitle(`Wyniki: ${query || 'wszystko'}`);
     this.metaService.updateTag({
       name: 'description',
-      content: `Zobacz wyniki wyszukiwania dla frazy: ${query || 'wszystko'}`
+      content: `Wyniki wyszukiwania`
     });
   }
 
