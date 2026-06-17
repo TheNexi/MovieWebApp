@@ -8,6 +8,7 @@ const Login = lazy(() => import("../pages/Auth/Login"));
 const Register = lazy(() => import("../pages/Auth/Register"));
 const Home = lazy(() => import("../pages/Home/Home"));
 const MovieDetails = lazy(() => import("../pages/Movie/MovieDetails"));
+const MoviePage = lazy(() => import("../pages/Movie/MoviePage"));
 const Favourites = lazy(() => import("../pages/User/Favourites"));
 const Profile = lazy(() => import("../pages/User/Profile"));
 
@@ -69,6 +70,16 @@ export const router = createBrowserRouter([
         )
       },
 
+      {
+        path: "movie-page/:id",
+        element: (
+          <PrivateRoute>
+            <Suspense fallback={<div>Loading...</div>}>
+              <MoviePage />
+            </Suspense>
+          </PrivateRoute>
+        )
+      },
       {
         path: "favourites",
         element: (

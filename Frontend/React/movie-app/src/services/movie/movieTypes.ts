@@ -1,9 +1,26 @@
+export interface Review {
+  id: number;
+  content: string;
+  createdAt?: string;
+  user?: {
+    id: number;
+    username: string;
+  };
+}
+
 export interface Movie {
   id: number;
   title: string;
-  description: string;
+  description?: string;
+  releaseDate?: string;
+  durationMinutes?: number;
+  posterUrl?: string;
+  averageRating?: number;
+  genres?: string[];
+  actors?: string[];
+  directors?: string[];
+  reviews?: Review[];
 }
-
 export interface RatingRequest {
   rating: number;
 }

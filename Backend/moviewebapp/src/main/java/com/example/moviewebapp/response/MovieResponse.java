@@ -18,4 +18,5 @@ public class MovieResponse {
     private List<String> actors;
     private List<String> directors;
     private Double averageRating;
+    private List<ReviewResponse> reviews;
 }

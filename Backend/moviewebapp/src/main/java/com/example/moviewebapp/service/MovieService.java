@@ -4,6 +4,7 @@ import com.example.moviewebapp.model.*;
 import com.example.moviewebapp.repository.*;
 import com.example.moviewebapp.request.MovieRequest;
 import com.example.moviewebapp.response.MovieResponse;
+import com.example.moviewebapp.response.ReviewResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
@@ -20,38 +21,30 @@ public class MovieService {
     private final RatingRepository ratingRepository;
     private final ReviewRepository reviewRepository;
     private final CommentRepository commentRepository;
-    private final UserService userService;
+    private final UserRepository userRepository;
 
     public MovieService(
             MovieRepository movieRepository,
             RatingRepository ratingRepository,
             ReviewRepository reviewRepository,
             CommentRepository commentRepository,
-            UserService userService
+            UserRepository userRepository
     ) {
         this.movieRepository = movieRepository;
         this.ratingRepository = ratingRepository;
         this.reviewRepository = reviewRepository;
         this.commentRepository = commentRepository;
-        this.userService = userService;
+        this.userRepository = userRepository;
     }
 
     public ResponseEntity<?> getAllMoviesResponse() {
 
         List<MovieResponse> movies = movieRepository.findAll()
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::mapToFastResponse)
                 .toList();
 
         return ResponseEntity.ok(movies);
-    }
-
-    public ResponseEntity<?> getMovieByIdResponse(Long movieId) {
-
-        Movie movie = movieRepository.findById(movieId)
-                .orElseThrow(() -> new RuntimeException("Movie not found"));
-
-        return ResponseEntity.ok(mapToResponse(movie));
     }
 
     public ResponseEntity<?> getFirstMoviesResponse(int limit) {
@@ -61,16 +54,22 @@ public class MovieService {
                     .body("Unsupported limit");
         }
 
-        List<Movie> movies = movieRepository.findAll(
-                PageRequest.of(0, limit)
-        ).getContent();
-
-        List<MovieResponse> response = movies
+        List<MovieResponse> response = movieRepository
+                .findAll(PageRequest.of(0, limit))
+                .getContent()
                 .stream()
-                .map(this::mapToResponse)
+                .map(this::mapToFastResponse)
                 .toList();
 
         return ResponseEntity.ok(response);
+    }
+
+    public ResponseEntity<?> getMovieByIdResponse(Long movieId) {
+
+        Movie movie = movieRepository.findById(movieId)
+                .orElseThrow(() -> new RuntimeException("Movie not found"));
+
+        return ResponseEntity.ok(mapToFullResponse(movie));
     }
 
     public ResponseEntity<?> addMovieResponse(MovieRequest request) {
@@ -86,7 +85,7 @@ public class MovieService {
         movieRepository.save(movie);
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(mapToResponse(movie));
+                .body(mapToFastResponse(movie));
     }
 
     public ResponseEntity<?> addRatingResponse(
@@ -95,7 +94,7 @@ public class MovieService {
             HttpServletRequest request
     ) {
 
-        User user = userService.getUserFromRequest(request);
+        User user = getUser(request);
 
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
@@ -123,7 +122,7 @@ public class MovieService {
             HttpServletRequest request
     ) {
 
-        User user = userService.getUserFromRequest(request);
+        User user = getUser(request);
 
         Movie movie = movieRepository.findById(movieId)
                 .orElseThrow(() -> new RuntimeException("Movie not found"));
@@ -151,7 +150,7 @@ public class MovieService {
             HttpServletRequest request
     ) {
 
-        User user = userService.getUserFromRequest(request);
+        User user = getUser(request);
 
         Review review = reviewRepository.findById(reviewId)
                 .orElseThrow(() -> new RuntimeException("Review not found"));
@@ -181,7 +180,23 @@ public class MovieService {
         );
     }
 
-    private MovieResponse mapToResponse(Movie movie) {
+    private MovieResponse mapToFastResponse(Movie movie) {
+
+        return MovieResponse.builder()
+                .id(movie.getId())
+                .title(movie.getTitle())
+                .description(movie.getDescription())
+                .releaseDate(movie.getReleaseDate())
+                .durationMinutes(movie.getDurationMinutes())
+                .posterUrl(movie.getPosterUrl())
+                .averageRating(0.0)
+                .genres(List.of())
+                .actors(List.of())
+                .directors(List.of())
+                .build();
+    }
+
+    private MovieResponse mapToFullResponse(Movie movie) {
 
         double avgRating = movie.getRatings()
                 .stream()
@@ -197,13 +212,42 @@ public class MovieService {
                 .durationMinutes(movie.getDurationMinutes())
                 .posterUrl(movie.getPosterUrl())
 
-                // TEMP: wyłączone dla testów wydajności
-                .genres(List.of())
-                .actors(List.of())
-                .directors(List.of())
+                .genres(movie.getGenres() != null
+                        ? movie.getGenres().stream().map(Genre::getName).toList()
+                        : List.of())
+
+                .actors(movie.getActors() != null
+                        ? movie.getActors().stream().map(Actor::getName).toList()
+                        : List.of())
+
+                .directors(movie.getDirectors() != null
+                        ? movie.getDirectors().stream().map(Director::getName).toList()
+                        : List.of())
 
                 .averageRating(avgRating)
+
+                .reviews(
+                        movie.getReviews() != null
+                                ? movie.getReviews().stream().map(r ->
+                                ReviewResponse.builder()
+                                        .id(r.getId())
+                                        .content(r.getContent())
+                                        .username(r.getUser().getUsername())
+                                        .movieId(movie.getId())
+                                        .createdAt(r.getCreatedAt())
+                                        .build()
+                        ).toList()
+                                : List.of()
+                )
                 .build();
+    }
+
+    private User getUser(HttpServletRequest request) {
+
+        String username = request.getHeader("username");
+
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     private boolean isAllowedLimit(int limit) {

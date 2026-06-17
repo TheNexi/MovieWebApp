@@ -7,3 +7,11 @@ export interface Review {
     username: string;
   };
 }
+
+export interface RatingRequest {
+  rating: number;
+}
+
+export interface ReviewRequest {
+  content: string;
+}

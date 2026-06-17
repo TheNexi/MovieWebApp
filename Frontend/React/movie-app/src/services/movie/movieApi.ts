@@ -8,10 +8,18 @@ export const getMovieById = (id: number) =>
   API.get<Movie>(`/movies/${id}`);
 
 export const rateMovie = (id: number, data: RatingRequest) =>
-  API.post(`/movies/${id}/rate`, data);
+  API.post(`/movies/${id}/rate`, data, {
+    headers: {
+      username: localStorage.getItem("user")
+    }
+  });
 
 export const addReviewToMovie = (id: number, data: ReviewRequest) =>
-  API.post(`/movies/${id}/review`, data);
+  API.post(`/movies/${id}/review`, data, {
+    headers: {
+      username: localStorage.getItem("user")
+    }
+  });
 
 export const getCast = (id: number) =>
   API.get(`/movies/${id}/cast`);

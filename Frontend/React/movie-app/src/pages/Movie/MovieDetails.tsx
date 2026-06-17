@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "../../styles/page.css";
 import { getFirstMovies } from "../../services/movie/movieApi";
+import { useNavigate } from "react-router-dom";
 
 const LIMITS = [10, 100, 1000, 2500, 5000, 10000];
 
@@ -22,6 +23,7 @@ const MovieDetails = () => {
   const [loadingLimit, setLoadingLimit] = useState<number | null>(null);
   const [mode, setMode] = useState<MeasureMode>("json");
   const [movies, setMovies] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const moveCurrentToHistory = () => {
     setCurrent((prev) => {
@@ -298,8 +300,12 @@ const MovieDetails = () => {
 
               <div className="poster-grid">
                 {movies.map((movie) => (
-                  <div key={movie.id} className="poster-card">
-
+                  <div
+                    key={movie.id}
+                    className="poster-card"
+                    onClick={() => navigate(`/movie/${movie.id}`)}
+                    style={{ cursor: "pointer" }}
+                  >
                     <img
                       src={movie.posterUrl}
                       alt={movie.title}
@@ -307,7 +313,6 @@ const MovieDetails = () => {
                       loading="eager"
                       draggable={false}
                     />
-
                   </div>
                 ))}
               </div>
