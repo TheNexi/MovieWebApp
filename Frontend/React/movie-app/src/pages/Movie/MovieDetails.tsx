@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../../styles/page.css";
+import "./movie-details.css";
 import { getFirstMovies } from "../../services/movie/movieApi";
 import { useNavigate } from "react-router-dom";
 

@@ -67,3 +67,63 @@
   font-weight: bold;
   color: #28a745;
 }
+
+@media (max-width: 768px) {
+	.search-results-container {
+		margin: 20px auto;
+		padding: 14px;
+		gap: 12px;
+	}
+
+	.search-results-header {
+		flex-direction: column;
+		align-items: stretch;
+		gap: 10px;
+	}
+
+	.search-results-header input {
+		width: 100%;
+		font-size: 15px;
+	}
+
+	.search-results-info {
+		font-size: 0.9rem;
+		text-align: center;
+	}
+
+	.viewport {
+		height: auto;
+		max-height: 60vh;
+	}
+
+	.movie-item-card {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 8px;
+		padding: 12px;
+		margin: 6px;
+	}
+
+	.movie-item-price {
+		align-self: flex-end;
+		font-size: 1rem;
+	}
+}
+
+@media (max-width: 400px) {
+	.search-results-container {
+		padding: 10px;
+	}
+
+	.movie-item-details strong {
+		font-size: 15px;
+	}
+
+	.movie-item-details span {
+		font-size: 13px;
+	}
+
+	.movie-item-price {
+		font-size: 0.95rem;
+	}
+}

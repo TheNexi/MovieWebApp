@@ -9,8 +9,6 @@ const Register = lazy(() => import("../pages/Auth/Register"));
 const Home = lazy(() => import("../pages/Home/Home"));
 const MovieDetails = lazy(() => import("../pages/Movie/MovieDetails"));
 const MoviePage = lazy(() => import("../pages/Movie/MoviePage"));
-const Favourites = lazy(() => import("../pages/User/Favourites"));
-const Profile = lazy(() => import("../pages/User/Profile"));
 
 const AdvancedSearchHome = lazy(
   () => import("../pages/AdvancedSearch/AdvancedSearchHome")
@@ -29,7 +27,6 @@ export const router = createBrowserRouter([
         index: true,
         element: <Navigate to="/login" replace />
       },
-
       {
         path: "login",
         element: (
@@ -38,7 +35,6 @@ export const router = createBrowserRouter([
           </Suspense>
         )
       },
-
       {
         path: "register",
         element: (
@@ -47,7 +43,6 @@ export const router = createBrowserRouter([
           </Suspense>
         )
       },
-
       {
         path: "home",
         element: (
@@ -58,7 +53,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         )
       },
-
       {
         path: "movie/:id",
         element: (
@@ -69,7 +63,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         )
       },
-
       {
         path: "movie-page/:id",
         element: (
@@ -81,28 +74,6 @@ export const router = createBrowserRouter([
         )
       },
       {
-        path: "favourites",
-        element: (
-          <PrivateRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Favourites />
-            </Suspense>
-          </PrivateRoute>
-        )
-      },
-
-      {
-        path: "profile",
-        element: (
-          <PrivateRoute>
-            <Suspense fallback={<div>Loading...</div>}>
-              <Profile />
-            </Suspense>
-          </PrivateRoute>
-        )
-      },
-
-      {
         path: "advanced-search",
         element: (
           <PrivateRoute>
@@ -112,7 +83,6 @@ export const router = createBrowserRouter([
           </PrivateRoute>
         )
       },
-
       {
         path: "advanced-search/results",
         element: (

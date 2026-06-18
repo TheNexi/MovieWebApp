@@ -1,12 +1,14 @@
 <main class="app-shell">
   <ng-container *ngIf="loggedIn; else authOnly">
     <nav class="app-nav">
-      <a routerLink="/home">Home</a>
-      <a routerLink="/advanced-search">Wyszukiwarka (10k)</a>
-      <a routerLink="/movie/1">Movie Details</a>
-      <a routerLink="/favourites">Favourites</a>
-      <a routerLink="/profile">Profile</a>
-      <button (click)="logout()" style="margin-left: 16px">Wyloguj</button>
+      <a routerLink="/home">Strona główna</a>
+      <a routerLink="/advanced-search">Wyszukiwarka</a>
+      <a routerLink="/movie/1">Filmy</a>
+      <div class="nav-right">
+  <button class="btn btn-danger" (click)="logout()">
+    Wyloguj
+  </button>
+</div>
     </nav>
     <section class="page-content">
       <router-outlet></router-outlet>

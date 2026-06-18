@@ -14,11 +14,9 @@ const Navbar = () => {
 
   return (
     <nav className="app-nav">
-      <Link to="/home">Home</Link>
-      <Link to="/advanced-search">Wyszukiwarka (10k)</Link>
-      <Link to="/movie/1">Movie Details</Link>
-      <Link to="/favourites">Favourites</Link>
-      <Link to="/profile">Profile</Link>
+      <Link to="/home">Strona główna</Link>
+      <Link to="/advanced-search">Wyszukiwarka</Link>
+      <Link to="/movie/1">Filmy</Link>
       <button onClick={handleLogout} style={{ marginLeft: 16 }}>Wyloguj</button>
     </nav>
   );

@@ -1,9 +1,12 @@
 .review-form-container {
   margin-top: 2rem;
   padding: 1.8rem;
+
   background: linear-gradient(145deg, #ffffff, #f8fafc);
+
   border-radius: 16px;
   border: 1px solid #e5e7eb;
+
   box-shadow: 0 10px 30px rgba(0,0,0,0.06);
 }
 
@@ -26,11 +29,11 @@
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   resize: vertical;
+  min-height: 110px;
   font-size: 1rem;
   font-family: inherit;
   background: #fff;
   transition: all 0.2s ease;
-  min-height: 110px;
 }
 
 .review-form textarea:focus {
@@ -109,4 +112,24 @@
   padding: 8px 10px;
   border-radius: 8px;
   border: 1px solid #bbf7d0;
+}
+
+@media (max-width: 768px) {
+  .review-form-container {
+    padding: 1.5rem;
+  }
+
+  .submit-review-btn {
+    width: auto;
+  }
+}
+
+@media (max-width: 400px) {
+  .review-form-container {
+    padding: 1.2rem;
+  }
+
+  .review-form-container h3 {
+    font-size: 1.15rem;
+  }
 }

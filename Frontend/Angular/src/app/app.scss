@@ -37,3 +37,53 @@
 .page-content {
 	margin-top: 1.25rem;
 }
+
+.nav-right {
+	margin-left: auto;
+	display: flex;
+	align-items: center;
+}
+
+@media (max-width: 768px) {
+	.app-shell {
+		padding: 1rem 0.75rem;
+	}
+
+	.app-shell h1 {
+		font-size: 1.5rem;
+		line-height: 1.2;
+	}
+
+	.app-shell p {
+		font-size: 0.95rem;
+	}
+
+	.app-nav {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.app-nav a {
+		width: 100%;
+		text-align: center;
+		padding: 0.6rem 0.75rem;
+	}
+
+	.page-content {
+		margin-top: 1rem;
+	}
+}
+
+@media (max-width: 400px) {
+	.app-shell {
+		padding: 0.75rem 0.5rem;
+	}
+
+	.app-shell h1 {
+		font-size: 1.3rem;
+	}
+
+	.app-nav a {
+		font-size: 0.95rem;
+	}
+}
